@@ -6,7 +6,10 @@ const router = Router()
 
 
 router.post('/newCategory',fileUpload(fileValidation.image).single('image'),CC.createCategory)
-
+router.put('/updateCategory/:categoryId',fileUpload(fileValidation.image).single('image'),CC.updateCateory)
+router.patch('/deleteCategory/:categoryId',CC.deleteCategory)
+router.get('/allCategories',CC.getAllCatigories)
+router.post('/:categoryId',CC.getOneCategory)
 
 
 

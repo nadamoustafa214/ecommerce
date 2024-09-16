@@ -4,9 +4,9 @@ import cloudinary from 'cloudinary';
 
 
 cloudinary.v2.config({
-    api_key:process.env.API_KEY,
-    api_secret:process.env.API_SECRET_KEY,
-    cloud_name:process.env.dheurplxu,
+    api_key:"918244843284342",
+    api_secret:"uVyysBks24ic5kAT7u4OMFBI6hM",
+    cloud_name:"dheurplxu",
     secure: true
 })
 
