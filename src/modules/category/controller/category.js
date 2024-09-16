@@ -3,7 +3,6 @@ import categoryModel from '../../../../DB/model/Category.model.js'
 import slugify from 'slugify'
 
 export const createCategory=async (req,res,next)=>{
-
     const {name}=req.body
 const {secure_url,public_id}=await cloudinary.uploader.upload(req.file.path,{folder:`category`})
 const category=await categoryModel.create({name,image:{secure_url,public_id},slug:slugify(name,'-')})
@@ -11,7 +10,7 @@ return res.status(201).json({message:'created',category})
 }
 
 export const updateCateory=async (req,res,next)=>{
-try{
+
     const {name}=req.body
     let image;
     if(req.file){
@@ -23,48 +22,33 @@ try{
         return next(new Error('category not found',{cause:400}))
     }
     return res.status(200).json({message:'updated',category})
-}catch(err){
-    return res.status(400).json({message:'catch',err,stack:err.stack})
-
-}
 }
 
 export const deleteCategory=async (req,res,next)=>{
-try{
+
     const category=await categoryModel.findByIdAndUpdate({_id:req.params.categoryId},{isDeleted:true})
     await cloudinary.uploader.destroy(category.image.secure_url,category.image.public_id)
     if(!category){
         return next(new Error('category not found'),{cause:400})
     }
     return res.status(200).json({message:"done"})
-}catch(err){
-    return res.status(400).json({message:'catch',err,stack:err.stack})
-
-}
 }
 
 export const getAllCatigories=async (req,res,next)=>{
-    try{
     const catigores=await categoryModel.find({isDeleted:false}).select('name slug image')
     if(!catigores){
         return next(new Error('no catigores found',{cause:400}))
     }
     return res.status(200).json({message:"done",catigores})
-}catch(err){
-    return res.status(400).json({message:'catch',err,stack:err.stack})
-
-}
 }
 
 export const getOneCategory=async (req,res,next)=>{
- try{
+
         const category=await categoryModel.findById({_id:req.params.categoryId}).select('name slug image')
         if(!category &&category.isDeleted==true){
             return next(new Error('category not found',{cause:400}))
         }
         return res.status(200).json({message:'done',category})
 
-    }catch(err){
-    return res.status(400).json({message:'catch',err,stack:err.stack})
-}
+
 }
