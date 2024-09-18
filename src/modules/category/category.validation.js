@@ -10,15 +10,15 @@ file:generalFields.file,
 }).required()
 
 export const updateCategorySchema=joi.object({
-name:joi.string().min(2).max(50).required(),
+name:joi.string().min(2).max(50),
 file:generalFields.file,
 categoryId:generalFields.id.required(),
 
 }).required()
 
 export const deleteCategorySchema=joi.object({
-    name:joi.string().min(2).max(50).required(),
-    file:generalFields.file,
+    // name:joi.string().min(2).max(50).required(),
+    // file:generalFields.file,
     categoryId:generalFields.id.required(),
     
 }).required()

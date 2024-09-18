@@ -36,7 +36,7 @@ export const validation = (schema) => {
             if(req.file||req.files){
                 inputsData.file=req.file || req.files
             }
-            console.log(inputsData);
+            // console.log(inputsData);
             
         // const validationErr = []
         // dataMethods.forEach(key => {

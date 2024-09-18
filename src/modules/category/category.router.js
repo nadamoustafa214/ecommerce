@@ -4,8 +4,10 @@ import { validation } from "../../middleware/validation.js";
 import {fileValidation,fileUpload} from './../../utils/multer.js'
 import { asyncHandler } from "../../utils/errorHandling.js";
 import * as validators from '../category/category.validation.js' 
+import subCategory from "./../subcategory/subcategory.router.js"
 const router = Router()
 
+router.use('/:categoryId/subCategory',subCategory)
 
 router.post('/newCategory',fileUpload(fileValidation.image).single('image'),validation(validators.newCategorySchema),CC.createCategory)
 router.put('/updateCategory/:categoryId',fileUpload(fileValidation.image).single('image'),validation(validators.updateCategorySchema),asyncHandler(CC.updateCateory))
