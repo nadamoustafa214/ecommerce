@@ -46,7 +46,9 @@ export const deleteCategory=async (req,res,next)=>{
 }
 
 export const getAllCatigories=async (req,res,next)=>{
-    const catigores=await categoryModel.find({isDeleted:false}).select('name slug image')
+    const catigores=await categoryModel.find({isDeleted:false}).select('name slug image').populate([{
+        path:"subCategories"
+    }])
     if(!catigores){
         return next(new Error('no catigores found',{cause:400}))
     }
