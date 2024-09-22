@@ -1,14 +1,13 @@
-import { Schema, model } from "mongoose";
-
+import mongoose, { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-
+    firstName:String,
+    lastName:String,
     userName: {
         type: String,
         required: [true, 'userName is required'],
         min: [2, 'minimum length 2 char'],
         max: [20, 'max length 2 char']
-
     },
     email: {
         type: String,
@@ -21,31 +20,34 @@ const userSchema = new Schema({
     },
     phone: {
         type: String,
+        required:true
     },
     role: {
         type: String,
-        default: 'User',
-        enum: ['User', 'Admin']
+        default: 'user',
+        enum: ['uer', 'admin']
     },
-
-    active: {
-        type: Boolean,
-        default: false,
+    gender: {
+        type: String,
+        default: 'male',
+        enum: ['male', 'female']
+    },
+    status: {
+        type: String,
+        default: 'offline',
+        enum:['online','offline','blocked']
     },
     confirmEmail: {
         type: Boolean,
         default: false,
     },
-    blocked: {
-        type: Boolean,
-        default: false,
-    },
-    image: String,
+    address:String,
+    image: Object,
     DOB: String,
 }, {
     timestamps: true
 })
 
 
-const userModel = model('User', userSchema)
+const userModel = mongoose.model.User || model('User', userSchema)
 export default userModel
