@@ -4,7 +4,7 @@ const categorySchema=new Schema({
     name:{type:String,required:true,unique:true},
     image:{type:Object,required:true},
     slug:{type:String,required:true},
-    userId:{type:Types.ObjectId,ref:'User',required:false},
+    userId:{type:Types.ObjectId,ref:'User',required:true},
     isDeleted:{type:Boolean,default:false}
 },
 {

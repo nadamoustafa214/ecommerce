@@ -8,7 +8,7 @@ if(await categoryModel.findOne({name:name})){
 return next(new Error('category name already exist',{cause:400}))
 }
 const {secure_url,public_id}=await cloudinary.uploader.upload(req.file.path,{folder:`category`})
-const category=await categoryModel.create({name,image:{secure_url,public_id},slug:slugify(name,'-')})
+const category=await categoryModel.create({name,image:{secure_url,public_id},slug:slugify(name,'-'),userId:req.user._id})
 return res.status(201).json({message:'created',category})
 }
 

@@ -1,24 +1,17 @@
-import jwt from "jsonwebtoken";
 import userModel from "../../DB/model/User.js";
-
-
+import { verifyToken } from "../utils/GenerateAndVerifyToken.js";
 
 const auth = async (req, res, next) => {
     try {
         const { authorization } = req.headers;
-       
-       
-
         if (!authorization?.startsWith(process.env.BEARER_KEY)) {
             return res.json({ message: "In-valid bearer key" })
         }
         const token = authorization.split(process.env.BEARER_KEY)[1]
-      
         if (!token) {
             return res.json({ message: "In-valid token" })
         }
-
-        const decoded = jwt.verify(token, process.env.TOKEN_SIGNATURE)
+        const decoded = verifyToken({token})
         if (!decoded?.id) {
             return res.json({ message: "In-valid token payload" })
         }
