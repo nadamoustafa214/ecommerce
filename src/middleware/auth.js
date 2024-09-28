@@ -1,8 +1,14 @@
-import userModel from "../../DB/model/User.js";
+import userModel from "../../DB/model/User.model.js";
 import { verifyToken } from "../utils/GenerateAndVerifyToken.js";
+import {asyncHandler} from './../utils/errorHandling.js'
 
-const auth = async (req, res, next) => {
-    try {
+export const roles={
+    admin:"admin",
+    user:"user"
+}
+
+const auth = (roles=[])=>{
+    return asyncHandler( async (req, res, next) => {
         const { authorization } = req.headers;
         if (!authorization?.startsWith(process.env.BEARER_KEY)) {
             return res.json({ message: "In-valid bearer key" })
@@ -15,15 +21,21 @@ const auth = async (req, res, next) => {
         if (!decoded?.id) {
             return res.json({ message: "In-valid token payload" })
         }
-        const authUser = await userModel.findById(decoded.id).select('userName email role')
+        const authUser = await userModel.findById(decoded.id).select('userName email role changePassTime')
         if (!authUser) {
             return res.json({ message: "Not register account" })
         }
+        if(parseInt(authUser.changePassTime.getTime()/1000 >decoded.iat)){
+            return next(new Error("expierd token"))
+        }
+
+        if(!roles.includes(authUser.role)){
+            return next(new Error('not authorized user',{cause:403}))
+        }
         req.user = authUser;
         return next()
-    } catch (error) {
-        return res.json({ message: "Catch error" , err:error?.message })
-    }
+  
+    })
 }
 
 export default auth

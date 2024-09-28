@@ -1,8 +1,9 @@
 import userModel from "../../../../DB/model/User.model.js"
-import {compare, hash} from './../../../utils/HashAndCompare.js'
-import cloudinay from './../../../utils/cloudinary.js'
-import {generateToken,verifyToken} from './../../../utils/GenerateAndVerifyToken.js'
-import sendEmail from './../../../utils/email.js'
+import {compare, hash} from '../../../utils/HashAndCompare.js'
+import cloudinay from '../../../utils/cloudinary.js'
+import {generateToken,verifyToken} from '../../../utils/GenerateAndVerifyToken.js'
+import sendEmail from '../../../utils/email.js'
+import { nanoid ,customAlphabet } from "nanoid"
 
 export const signUp=async (req,res,next)=>{
     const {email,userName,password,phone}=req.body
@@ -92,5 +93,43 @@ export const login=async (req,res,next)=>{
     await user.save()
 
     return res.status(200).json({message:"done",token,refreshToken})
+
+}
+
+export const sendCode=async (req,res,next)=>{
+    const {email}=req.body
+    const nanoid=customAlphabet('123456789',6)
+    const code=nanoid()
+    const user=await userModel.findOneAndUpdate({email},{code:code})
+    if(!user){
+        return next(new Error('not register account',{cause:404}))
+    }
+    const html=`<h1>forget password <hr>
+    your code id ${code}
+    </h1>`
+    const info=await sendEmail({to:email,subject:"forget password",html:html})
+    
+    if(!info){
+        return next(new Error('email rejected',{cause:404}))
+    }
+    return res.status(200).json({message:"done"})
+
+}
+
+export const resetPassword=async (req,res,next)=>{
+    const {email,password,code}=req.body
+    const user=await userModel.findOne({email})
+    if(!user){
+        return next(new Error('email not found',{cause:404}))
+    }
+    if(code!=user.code){
+        return next(new Error('invalid code',{cause:400}))
+    }
+    const hashPassword=hash({plaintext:password})
+    user.password=hashPassword
+    user.code=null
+    user.changePassTime=Date.now()
+    await user.save()
+    return res.status(200).json({message:"done"})
 
 }

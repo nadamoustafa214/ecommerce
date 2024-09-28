@@ -44,6 +44,11 @@ const userSchema = new Schema({
     address:String,
     image: Object,
     DOB: String,
+    code:{
+        type:Number,
+        default:null
+    },
+    changePassTime:Date
 }, {
     timestamps: true
 })

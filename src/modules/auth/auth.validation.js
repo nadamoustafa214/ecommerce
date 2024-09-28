@@ -17,3 +17,10 @@ export const loginSchema=joi.object({
     email:generalFields.email,
     password:generalFields.password
 }).required()
+
+export const restPasswordSchema=joi.object({
+    password:generalFields.password.required(),
+    cpassword:generalFields.cPassword.valid(joi.ref('password')).required(),
+    email:generalFields.email.required(),
+    code:joi.string().pattern(new RegExp(/^[0-9]{6}$/)).required()
+}).required()

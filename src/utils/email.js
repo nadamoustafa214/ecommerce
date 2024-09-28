@@ -5,13 +5,13 @@ async function sendEmail({ to, cc, bcc, subject, html, attachments = [] } = {}) 
         service: 'gmail',
         auth: {
             user: process.env.EMAIL, // generated ethereal user
-            pass: process.env.PASSWORD_EMAIL, // generated ethereal password
+            pass: process.env.pass, // generated ethereal password
         },
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: `"ecommerce" <${process.env.EMAIL}>`, // sender address
+        from: `"commerce" <${process.env.EMAIL}>`, // sender address
         to,
         cc,
         bcc,
