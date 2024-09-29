@@ -5,7 +5,7 @@ const subCategorySchema=new Schema({
     customId:{type:String},
     image:{type:Object,required:true},
     slug:{type:String,required:true},
-    userId:{type:Types.ObjectId,ref:'User',required:false},
+    userId:{type:Types.ObjectId,ref:'User',required:true},
     categoryId:{type:Types.ObjectId,ref:'Category',required:true},
     isDeleted:{type:Boolean,default:false}
 },

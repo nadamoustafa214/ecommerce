@@ -6,7 +6,7 @@ const couponSchema=new Schema({
     amount:{type:Number,default:1},
     expireDate:Date,
     usedBy:[{type:Types.ObjectId,ref:'User'}],
-    userId:{type:Types.ObjectId,ref:'User',required:false},
+    userId:{type:Types.ObjectId,ref:'User',required:true},
     isDeleted:{type:Boolean,default:false}
 },
 {

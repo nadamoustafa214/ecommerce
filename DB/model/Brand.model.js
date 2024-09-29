@@ -3,7 +3,7 @@ import mongoose, { Schema,model,Types } from "mongoose";
 const brandSchema=new Schema({
     name:{type:String,required:true,unique:true},
     image:{type:Object,required:true},
-    userId:{type:Types.ObjectId,ref:'User',required:false},
+    userId:{type:Types.ObjectId,ref:'User',required:true},
     isDeleted:{type:Boolean,default:false}
 },
 {

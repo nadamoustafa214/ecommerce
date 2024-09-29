@@ -8,7 +8,7 @@ export const roles={
 }
 
 const auth = (roles=[])=>{
-    return asyncHandler( async (req, res, next) => {
+    return async (req, res, next) => {
         const { authorization } = req.headers;
         if (!authorization?.startsWith(process.env.BEARER_KEY)) {
             return res.json({ message: "In-valid bearer key" })
@@ -25,7 +25,10 @@ const auth = (roles=[])=>{
         if (!authUser) {
             return res.json({ message: "Not register account" })
         }
-        if(parseInt(authUser.changePassTime.getTime()/1000 >decoded.iat)){
+    
+        // console.log(parseInt(authUser.changePassTime?.getTime()/1000 >decoded.iat));
+        
+        if(parseInt(authUser.changePassTime?.getTime()/1000 >decoded.iat)){
             return next(new Error("expierd token"))
         }
 
@@ -35,7 +38,7 @@ const auth = (roles=[])=>{
         req.user = authUser;
         return next()
   
-    })
+    }
 }
 
 export default auth
