@@ -10,10 +10,16 @@ const router = Router()
 
 
 router.post('/newProduct',auth(endPoint.create),
-fileUpload(fileValidation.image).fields([{
+    fileUpload(fileValidation.image).fields([{
     name:"mainImage",maxCount:1},
     {name:"subImages",maxCount:5}]),
-    validation(validators.createProductSchema),PC.createProduct)
+    validation(validators.createProductSchema),asyncHandler(PC.createProduct))
+router.put('/updateProduct/:productId',auth(endPoint.update),
+    fileUpload(fileValidation.image).fields([{
+    name:"mainImage",maxCount:1},
+    {name:"subImages",maxCount:5}]),
+    validation(validators.updateProductSchema),asyncHandler(PC.updateProduct))
+router.patch('/deleteProduct/:productId',auth(endPoint.delete),validation(validators.deleteProduct),PC.deleteProduct)
 
 
 

@@ -10,12 +10,17 @@ import reviewsRouter from './modules/reviews/reviews.router.js'
 import subcategoryRouter from './modules/subcategory/subcategory.router.js'
 import userRouter from './modules/user/user.router.js'
 import { globalErrorHAndling } from './utils/errorHandling.js'
+import morgan from 'morgan'
 
 
 
 const initApp = (app, express) => {
     //convert Buffer Data
     app.use(express.json({}))
+    // check time for all apis
+    if(process.env.MOOD=='DEV'){
+        app.use(morgan('tiny'))
+    }
     //Setup API Routing 
     app.use(`/auth`, authRouter)
     app.use(`/user`, userRouter)

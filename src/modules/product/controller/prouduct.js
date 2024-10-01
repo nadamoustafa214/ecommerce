@@ -37,3 +37,66 @@ export const createProduct=async (req,res,next)=>{
     const product=await prouductModel.create(req.body)
     return res.status(201).json({message:"product created",product})
 }
+
+export const updateProduct=async (req,res,next)=>{
+    const product=await prouductModel.findById({_id:req.params.productId})
+    if(!product){
+        return next(new Error('product not found',{cause:404}))
+    }
+    const {name,price,categoryId,subCategoryId,brandId,discount}=req.body
+    
+    const user=await userModel.findById(req.user._id)
+    if(!user || user.role=='user'){
+        return next(new Error('invalid user',{cause:404}))
+    }
+    if(categoryId||subCategoryId){
+        if(!await subCategoryModel.findById({_id:subCategoryId,categoryId})){
+            return next(new Error('category or sub category not found',{cause:404}))
+        }
+    }
+   if(brandId){
+       if(!await brandModel.findById({_id:brandId})){
+           return next(new Error('brand not found',{cause:404}))
+       }
+   }
+   if(req.files?.mainImage?.length){
+        const {secure_url,public_id}=await cloudinary.uploader.upload(req.files.mainImage[0].path,{folder:`category/subCategory/product/${product.customId}`})
+       await cloudinary.uploader.destroy({secure_url,public_id})
+        req.body.mainImage={secure_url,public_id}
+   }
+
+    if(req.files?.subImages?.length){
+        req.body.subImages=[]
+        for(const file of req.files.subImages){
+            const {secure_url,public_id}=await cloudinary.uploader.upload(file.path,{folder:`category/subCategory/product/${product.customId}`})
+            req.body.subImages.push({secure_url,public_id})
+        }
+    }
+
+    if(price && discount){
+        req.body.finalPrice=price -(price*((discount||0)/100))
+    }else if(price){
+        req.body.finalPrice=price -(price*((product.discount)/100))
+    }else if(discount){
+        req.body.finalPrice=product.price -(product.price*((discount)/100))
+    }
+
+    if(name){
+        req.body.slug=slugify(name,{replacement:"-",trim:true,lower:true})
+    }
+        req.body.updatedBy=req.user._id
+
+    await prouductModel.updateOne(req.body)
+    return res.status(201).json({message:"product updated",product})
+}
+
+export const deleteProduct=async (req,res,next)=>{
+    const product=await prouductModel.findByIdAndUpdate({_id:req.params.productId},{isDeleted:true})
+    if(!product){
+        return next(new Error('product not found',{cause:404}))
+    }else if(product.isDeleted==true){
+        return next(new Error('product was deleted berfore',{cause:404}))
+
+    }
+    return res.status(200).json({message:"deleted" })
+}

@@ -9,6 +9,7 @@ if(req.file){
     const {secure_url,public_id}=await cloudinary.uploader.upload(req.file.path,{folder:`coupon`})
     req.body.image={secure_url,public_id}  
 }
+req.body.expireDate=new Date(req.body.expireDate)
 const coupon = await couponModel.create(req.body)
     return res.status(201).json({message:'created',coupon})
 }
@@ -36,6 +37,9 @@ export const updateCoupon=async (req,res,next)=>{
     }
     if(req.body.amount){
         coupon.amount=req.body.amount
+    }
+    if(req.body.expireDate){
+        req.body.expireDate=new Date(req.body.expireDate)
     }
     await coupon.save()
     return res.status(200).json({message:'updated',coupon})
