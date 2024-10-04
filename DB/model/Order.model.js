@@ -1,4 +1,3 @@
-import { required } from "joi";
 import mongoose, { Schema,Types,model } from "mongoose";
 
 const orderSchema=new Schema({
@@ -15,7 +14,8 @@ const orderSchema=new Schema({
     finalPrice:{type:Number,default:1,required:true},
     paymentType:{type:String,default:"cash",enum:['cash','card']},
     status:{type:String,default:'placed',enum:['waitPayment','placed','canceled','rejected','onWay','deliverd']},
-    reason:String
+    reason:String,
+    updatedBy:{type:Types.ObjectId,ref:'User'}
 
 },{timestamps:true})
 

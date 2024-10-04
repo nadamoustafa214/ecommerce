@@ -3,8 +3,8 @@ import { Types } from 'mongoose'
 const dataMethods = ["body", 'params', 'query', 'headers', 'file']
 
 const validateObjectId = (value, helper) => {
-    console.log({ value });
-    console.log(helper);
+    // console.log({ value });
+    // console.log(helper);
     return Types.ObjectId.isValid(value) ? true : helper.message('In-valid objectId')
 }
 export const generalFields = {
