@@ -2,7 +2,7 @@ import orderModel from '../../../../DB/model/Order.model.js'
 import couponModel from './../../../../DB/model/Coupon.model.js'
 import productModel from './../../../../DB/model/poduct.model.js'
 import cartModel from './../../../../DB/model/Cart.model.js'
-import { status } from 'init'
+import {deleteItemsFromCart} from './../../cart/controller/cart.js'
 
 
 
@@ -72,13 +72,10 @@ export const createOrder=async (req,res,next)=>{
         await couponModel.updateOne({_id:req.body.coupon._id},{$addToSet:{usedBy:req.user._id}})
     }
     if(req.body.isCart){
-        await cartModel.updateOne({userId:req.user._id},{items:[]})
+        // await cartModel.updateOne({userId:req.user._id},{items:[]})
+        await clearItem(req.user._id)
     }else{
-        await cartModel.updateOne({userId:req.user._id},{
-            $pull:{items:{
-                productId:{$in:productIds}
-            }}
-        })
+       await deleteItemsFromCart(productIds,req.user._id)
     }
 
     return res.status(201).json({message:"done",order})

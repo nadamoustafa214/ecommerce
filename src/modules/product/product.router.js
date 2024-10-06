@@ -26,7 +26,7 @@ router.patch('/deleteProduct/:productId',auth(endPoint.delete),validation(valida
 router.patch('/:productId/addWishList',auth(endPoint.addWishList),validation(validators.addToWishListSchema),PC.addToWishList)
 router.patch('/:productId/removeWishList',auth(endPoint.addWishList),validation(validators.addToWishListSchema),PC.removeToWishList)
 
-
+router.get('/',PC.getProducts)
 
 
 

@@ -29,7 +29,7 @@ export const signUp=async (req,res,next)=>{
         req.body.image={public_id,secure_url}
     }
     const hashPassword=hash({plaintext:password})
-    const {_id}=await userModel.create({email,userName,password:hashPassword,image:req.body.image,phone})
+    const {_id}=await userModel.create({email:email.toLowerCase(),userName,password:hashPassword,image:req.body.image,phone})
     return res.status(201).json({message:"done",_id})
 
 }
@@ -40,7 +40,7 @@ export const confirmEmail=async (req,res,next)=>{
     if(!email){
         return next(new Error('invalid payload'))
     }
-    const user=await userModel.updateOne({email},{confirmEmail:true})
+    const user=await userModel.updateOne({email:email.toLowerCase()},{confirmEmail:true})
     return res.status(200).json({message:"confirm email done"})
 }
 
@@ -67,10 +67,10 @@ export const newConfirnEmail=async (req,res,next)=>{
     const html=`<a href="${link}">click here to confirm your email</a>
     <br></br>
     `
-    // const info =await sendEmail({to:email,subject:"confirm Email",html:html})
-    // if(!info){
-    //     return next(new Error('email rejected',{cause:400}))
-    // }
+    const info =await sendEmail({to:email,subject:"confirm Email",html:html})
+    if(!info){
+        return next(new Error('email rejected',{cause:400}))
+    }
     return res.status(200).json({message:"requested new email done"})
 
 }
@@ -100,7 +100,7 @@ export const sendCode=async (req,res,next)=>{
     const {email}=req.body
     const nanoid=customAlphabet('123456789',6)
     const code=nanoid()
-    const user=await userModel.findOneAndUpdate({email},{code:code})
+    const user=await userModel.findOneAndUpdate({email:email.toLowerCase()},{code:code})
     if(!user){
         return next(new Error('not register account',{cause:404}))
     }

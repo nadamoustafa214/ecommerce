@@ -12,6 +12,8 @@ const router = Router()
 
 router.post('/',auth(endPoint.create),CC.createCart)
 
+router.patch('/removeItem',auth(endPoint.create),CC.deleteItems)
+router.patch('/clear',auth(endPoint.create),CC.emptyCart)
 
 
 

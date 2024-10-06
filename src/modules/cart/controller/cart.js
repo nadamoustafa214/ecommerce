@@ -35,3 +35,29 @@ export const createCart=async (req,res,next)=>{
     return res.status(200).json({message:"done",cart})
 
 }
+
+export async function deleteItemsFromCart(userId,productIds){
+   const cart= await cartModel.updateOne({userId},{
+        $pull:{items:{
+            productId:{$in:productIds}
+        }}
+    })
+    return cart
+}
+
+export const deleteItems=async (req,res,next)=>{
+const {productIds}=req.body
+  const cart=  await deleteItemsFromCart(productIds,req.user._id)
+    return res.status(200).json({message:"done",cart})
+      
+}
+
+export async function clearItem(userId){
+    const cart= await cartModel.updateOne({userId},{ items:[]})
+     return cart
+}
+
+export const  emptyCart=async (req,res,next)=>{
+      const cart=  await clearItem(req.user._id)
+        return res.status(200).json({message:"done",cart})   
+}

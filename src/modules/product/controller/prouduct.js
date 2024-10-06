@@ -5,6 +5,7 @@ import brandModel from './../../../../DB/model/Brand.model.js'
 import cloudinary from './../../../utils/cloudinary.js'
 import { nanoid } from "nanoid";
 import slugify from "slugify";
+import ApiFeatures from "../../../utils/apiFeatures.js";
 
 
 export const createProduct=async (req,res,next)=>{
@@ -133,4 +134,13 @@ export const removeToWishList=async (req,res,next)=>{
     );
 
     return res.status(200).json({ message: "Product removed from wishlist" });
+}
+
+export const getProducts=async(req,res,next)=>{
+    const apiFeature= new ApiFeatures(prouductModel.find().populate([{
+        path:'review'
+    }]),req.query).paginate().filter().sort().search()
+    const products= await apiFeature.mongooseQuery
+
+    return res.status(200).json({message:"done",products})
 }
