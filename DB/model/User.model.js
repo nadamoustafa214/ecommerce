@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 
 const userSchema = new Schema({
     firstName:String,
@@ -48,7 +48,8 @@ const userSchema = new Schema({
         type:Number,
         default:null
     },
-    changePassTime:Date
+    changePassTime:Date,
+    wishList:[{type:Types.ObjectId,ref:'Product'}]
 }, {
     timestamps: true
 })

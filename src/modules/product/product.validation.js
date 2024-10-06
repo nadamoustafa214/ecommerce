@@ -39,6 +39,10 @@ export const updateProductSchema=joi.object({
     
 }).required()
 
-export const deleteProduct=joi.object({
+export const deleteProductSchema=joi.object({
+    productId:generalFields.id
+}).required()
+
+export const addToWishListSchema=joi.object({
     productId:generalFields.id
 }).required()

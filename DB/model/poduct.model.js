@@ -25,8 +25,16 @@ const proudctSchema=new Schema({
     customId:String
 
 },{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true},
     timestamps:true
 })
+proudctSchema.virtual('review',{
+    localField:'_id',
+    foreignField:'productId',
+    ref:'Review'
+})
+
 
 const prouductModel= mongoose.model.Prouduct ||model('Prouduct',proudctSchema)
 

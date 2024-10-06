@@ -100,3 +100,37 @@ export const deleteProduct=async (req,res,next)=>{
     }
     return res.status(200).json({message:"deleted" })
 }
+
+export const addToWishList=async (req,res,next)=>{
+    const product=await prouductModel.findById({_id:req.params.productId})
+    if(!product){
+        return next(new Error('product not found',{cause:404}))
+    }
+    await userModel.updateOne({ _id:req.user._id},{$addToSet:{wishList:req.params.productId}})
+    return res.status(200).json({message:"done"})
+}
+
+export const removeToWishList=async (req,res,next)=>{
+    const product = await prouductModel.findById(req.params.productId);
+    if (!product) {
+      return next(new Error('Product not found', { cause: 404 }));
+    }
+
+    // Check if the product is in the user's wishlist
+    const user = await userModel.findById(req.user._id);
+    if (!user) {
+      return next(new Error('User not found', { cause: 404 }));
+    }
+
+    if (!user.wishList.includes(req.params.productId)) {
+      return res.status(400).json({ message: "Product not in wishlist" });
+    }
+
+    // Remove the product from the user's wishlist
+    await userModel.updateOne(
+      { _id: req.user._id },
+      { $pull: { wishList: req.params.productId } }
+    );
+
+    return res.status(200).json({ message: "Product removed from wishlist" });
+}
