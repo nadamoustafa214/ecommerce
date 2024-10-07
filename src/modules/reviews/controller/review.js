@@ -11,7 +11,7 @@ export const createReview=async (req,res,next)=>{
         status:"delivered",
         // "items.productId":req.params.productId
     })
-    console.log(req.params.productId);
+    // console.log(req.params.productId);
     
     if(!order){
         return next(new Error('cant review product before recive it ',{cause:404}))

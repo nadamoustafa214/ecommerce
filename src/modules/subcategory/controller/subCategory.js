@@ -12,7 +12,7 @@ if(issubCategory){
 if(!await categoryModel.findById(req.params.categoryId)){
 return next(new Error('category not found',{cause:400}))
 }
-console.log(req.params.categoryId);
+// console.log(req.params.categoryId);
 
 let customId=nanoid()
 const {secure_url,public_id}=await cloudinary.uploader.upload(req.file.path,{folder:`category/subCategory/${customId}`})
@@ -27,7 +27,7 @@ export const updateSubCateory=async (req,res,next)=>{
         return next(new Error('Subcategory not found',{cause:400}))
     }
     const category = await categoryModel.findById({_id:req.params.categoryId})
-    console.log(subCategory.categoryId.toString()!=req.params.categoryId);
+    // console.log(subCategory.categoryId.toString()!=req.params.categoryId);
     
     if(!category){
         if(subCategory.categoryId.toString()!=req.params.categoryId){

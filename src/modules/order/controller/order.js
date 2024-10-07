@@ -51,7 +51,7 @@ export const createOrder=async (req,res,next)=>{
         subtotal+=item.finalPrice
 
     }
-    console.log(finalProuductList);
+    // console.log(finalProuductList);
     
     const order=await orderModel.create({
         userId:req.user._id,
